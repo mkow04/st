@@ -214,6 +214,7 @@ static void usage(void);
 
 static void (*handler[LASTEvent])(XEvent *) = {
 	[KeyPress] = kpress,
+	[KeyRelease] = kpress,
 	[ClientMessage] = cmessage,
 	[ConfigureNotify] = resize,
 	[VisibilityNotify] = visibility,
@@ -541,6 +542,15 @@ mouseaction(XEvent *e, uint release)
 
 	mouse_col = evcol(e);
 	mouse_row = evrow(e);
+
+	if (release == 0 &&
+	    e->xbutton.button == Button1 &&
+	    (match(ControlMask, state) ||
+	     match(ControlMask, state & ~forcemousemod))) {
+		followurl(evrow(e), evcol(e));
+		return 1;
+	}
+
 
 	for (ms = mshortcuts; ms < mshortcuts + LEN(mshortcuts); ms++) {
 		if (ms->release == release &&
@@ -1786,7 +1796,7 @@ xdrawglyphfontspecs(const XftGlyphFontSpec *specs, Glyph base, int len, int x, i
 	int curlh = thick * 2 + roundf(fthick * 0.75);
 
 	/* Render the underline before the glyphs. */
-	if (base.mode & ATTR_UNDERLINE) {
+	if (base.mode & ATTR_UNDERLINE || base.mode & ATTR_URL) {
 		uint32_t style = tgetdecorstyle(&base);
 		int liney = winy + dc.font.ascent + gap;
 		/* Adjust liney to guarantee that a single underline fits. */
@@ -2316,6 +2326,18 @@ kpress(XEvent *ev)
 	} else {
 		len = XLookupString(e, buf, sizeof buf, &ksym, NULL);
 	}
+
+        /* 0. highlight URLs when control held */
+	if (ksym == XK_Control_L) {
+		highlighturls();
+	} else if (ev->type == KeyRelease && e->keycode == XKeysymToKeycode(e->display, XK_Control_L)) {
+		unhighlighturls();
+	}
+
+	/* KeyRelease not relevant to shortcuts */
+	if (ev->type == KeyRelease)
+		return;
+
 	/* 1. shortcuts */
 	for (bp = shortcuts; bp < shortcuts + LEN(shortcuts); bp++) {
 		if (ksym == bp->keysym && match(bp->mod, e->state)) {

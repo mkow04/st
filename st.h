@@ -43,6 +43,7 @@ enum glyph_attribute {
 	ATTR_WDUMMY     = 1 << 10,
 	ATTR_BOLD_FAINT = ATTR_BOLD | ATTR_FAINT,
 	ATTR_IMAGE      = 1 << 14,
+	ATTR_URL	= 1 << 15,
 };
 
 enum selection_mode {
@@ -127,6 +128,10 @@ char *getsel(void);
 
 Glyph getglyphat(int, int);
 
+void highlighturls(void);
+void unhighlighturls(void);
+void followurl(int, int);
+
 size_t utf8encode(Rune, char *);
 
 void *xmalloc(size_t);
@@ -146,6 +151,10 @@ extern unsigned int tabspaces;
 extern unsigned int defaultfg;
 extern unsigned int defaultbg;
 extern unsigned int defaultcs;
+extern char *urlhandler;
+extern char urlchars[];
+extern char *urlprefixes[];
+extern int nurlprefixes;
 
 // Accessors to decoration properties stored in `decor`.
 // The 25-th bit is used to indicate if it's a 24-bit color.
