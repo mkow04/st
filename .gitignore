@@ -1,5 +1,7 @@
 st
 st.o
+graphics.o
+rowcolumn_diacritics_helpers.o
 x.o
 *.orig
 *.rej
