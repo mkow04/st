@@ -24,6 +24,10 @@
 // not a 24-bit color because the 25-th bit is not set.
 #define DECOR_DEFAULT_COLOR	0x0ffffff
 
+#define HEX_TO_INT(c)		((c) >= '0' && (c) <= '9' ? (c) - '0' : \
+				(c) >= 'a' && (c) <= 'f' ? (c) - 'a' + 10 : \
+				(c) >= 'A' && (c) <= 'F' ? (c) - 'A' + 10 : -1)
+
 enum glyph_attribute {
 	ATTR_NULL       = 0,
 	ATTR_BOLD       = 1 << 0,
