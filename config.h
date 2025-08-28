@@ -5,7 +5,7 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "Hack Nerd Font Mono:pixelsize=16:antialias=true:autohint=true";
+static char *font = "Hack Nerd Font Mono:pixelsize=18:style=regular:antialias=true:autohint=true";
 static int borderpx = 2;
 
 /* How to align the content in the window when the size of the terminal
@@ -139,7 +139,7 @@ static const char *colorname[] = {
 	"#cccccc",
 	"#555555",
 	"#ffffff", /* default foreground colour */
-	"#181818", /* default background colour */
+	"#121212", /* default background colour */
 };
 
 
@@ -227,11 +227,12 @@ static uint forcemousemod = ShiftMask;
  */
 static MouseShortcut mshortcuts[] = {
 	/* mask                 button   function        argument       release */
-	{ ShiftMask,            Button4, kscrollup,      {.i = 1} },
-	{ ShiftMask,            Button5, kscrolldown,    {.i = 1} },
+	{ XK_ANY_MOD,           Button4, kscrollup,      {.i = 3} },
+	{ XK_ANY_MOD,           Button5, kscrolldown,    {.i = 3} },
+	{ ControlMask,          Button4, zoom,           {.f = +1} },
+	{ ControlMask,          Button5, zoom,           {.f = -1} },
 	{ TERMMOD,              Button3, previewimage,   {.s = "feh"} },
 	{ TERMMOD,              Button2, showimageinfo,  {},            1 },
-	{ XK_ANY_MOD,           Button2, selpaste,       {.i = 0},      1 },
 	{ ShiftMask,            Button4, ttysend,        {.s = "\033[5;2~"} },
 	{ XK_ANY_MOD,           Button4, ttysend,        {.s = "\031"} },
 	{ ShiftMask,            Button5, ttysend,        {.s = "\033[6;2~"} },
